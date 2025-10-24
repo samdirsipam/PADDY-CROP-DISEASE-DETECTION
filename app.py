@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 # Load the trained model
 MODEL_PATH = "crop_disease_model.keras"
-model = tf.keras.models.load_model(MODEL_PATH)
+model = None
 
 # Categories
 categories = [
@@ -20,6 +20,13 @@ categories = [
     'blast', 'brown_spot', 'dead_heart', 'downy_mildew',
     'hispa', 'normal', 'tungro'
 ]
+
+def get_model():
+    """Load the model only once when needed."""
+    global model
+    if model is None:
+        model = tf.keras.models.load_model(MODEL_PATH)
+    return model
 
 def preprocess_image(image):
     """Convert image to the format expected by the model."""
@@ -41,7 +48,10 @@ def predict():
     try:
         image = Image.open(io.BytesIO(file.read()))
         processed_image = preprocess_image(image)
-        prediction = model.predict(processed_image)
+
+        model_instance = get_model()
+        prediction = model_instance.predict(processed_image)
+        
         predicted_class = categories[np.argmax(prediction)]
         confidence = float(np.max(prediction))
         return render_template("index.html", prediction=predicted_class, confidence=confidence)

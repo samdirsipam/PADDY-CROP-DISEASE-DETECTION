@@ -2,24 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Paddy Crop Disease Prediction</title>
+    <title>Paddy Crop Disease Detection</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
-        /* Reset and base styles */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        /* Reset & base */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Roboto', sans-serif;
+             font-family: 'Lato', sans-serif;
             background: linear-gradient(135deg, #a8e6cf, #dcedc1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
             padding: 50px 20px;
+            min-height: 100vh;
+        }
+        h1, h2, h3 {
+            font-family: 'Poppins', sans-serif;  /* modern headings */
+            font-weight: 700;
         }
 
         h1 {
@@ -29,7 +30,8 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
-        form {
+        /* Card style */
+        .card {
             background: #ffffff;
             padding: 40px 30px;
             border-radius: 16px;
@@ -40,10 +42,7 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        form:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
-        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.2); }
 
         input[type="file"] {
             padding: 12px;
@@ -56,78 +55,122 @@
             transition: border-color 0.3s ease;
         }
 
-        input[type="file"]:hover {
-            border-color: #388e3c;
-        }
+        input[type="file"]:hover { border-color: #388e3c; }
 
         button {
             padding: 12px 25px;
-            background: linear-gradient(to right, #43a047, #66bb6a);
+            background: linear-gradient(135deg, #43a047, #66bb6a);
             color: white;
             border: none;
             border-radius: 12px;
             font-size: 1em;
             cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         }
 
         button:hover {
-            background: linear-gradient(to right, #2e7d32, #43a047);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
+        /* Result card */
         .result {
             margin-top: 40px;
             padding: 25px 30px;
-            background-color: #f1f8e9;
-            border-left: 6px solid #388e3c;
             border-radius: 14px;
             text-align: center;
-            max-width: 400px;
+            max-width: 450px;
             width: 100%;
             box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             animation: fadeIn 0.8s ease forwards;
         }
 
-        .result h2 {
-            color: #1b5e20;
-            font-size: 1.8em;
-            margin-bottom: 10px;
+        .result h2 { font-size: 1.8em; margin-bottom: 10px; }
+        .result h3 { font-size: 1.2em; margin-bottom: 15px; }
+
+        /* Suggestion box */
+        .suggestion {
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1em;
+            line-height: 1.4em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
         }
 
-        .result h3 {
-            color: #33691e;
-            font-size: 1.2em;
+        .healthy { background-color: #e0f7e9; border-left: 6px solid #43a047; color: #2e7d32; }
+        .diseased { background-color: #ffebee; border-left: 6px solid #e53935; color: #b71c1c; }
+
+        /* Confidence bar */
+        .confidence-bar {
+            width: 100%;
+            background-color: #c8e6c9;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 20px;
+            margin-bottom: 15px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .confidence-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #43a047, #66bb6a);
+            transition: width 1s ease-in-out;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            line-height: 20px;
+            font-size: 0.9em;
         }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Responsive */
         @media (max-width: 480px) {
-            form, .result {
-                padding: 25px 20px;
-            }
-            h1 {
-                font-size: 2.2em;
-            }
+            .card, .result { padding: 25px 20px; }
+            h1 { font-size: 2.2em; }
         }
     </style>
 </head>
 <body>
     <h1>Paddy Crop Disease Detection</h1>
 
-    <form action="/predict" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" required><br>
-        <button type="submit">Predict Disease</button>
-    </form>
+    <!-- Upload Form -->
+    <div class="card">
+        <form action="/predict" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" required><br>
+            <button type="submit">Predict Disease</button>
+        </form>
+    </div>
 
+    <!-- Prediction Result -->
     {% if prediction %}
     <div class="result">
         <h2>Prediction: {{ prediction }}</h2>
         <h3>Confidence: {{ confidence | round(3) }}</h3>
+
+        <!-- Confidence bar -->
+        <div class="confidence-bar">
+            <div class="confidence-fill" style="width: {{ confidence * 100 }}%">
+                {{ (confidence * 100) | round(1) }}%
+            </div>
+        </div>
+
+        <!-- Suggestion box -->
+        <div class="suggestion {{ 'healthy' if prediction == 'normal' else 'diseased' }}">
+            <!-- Optional icon -->
+            {% if prediction == 'normal' %}
+                ✅
+            {% else %}
+                ⚠️
+            {% endif %}
+            <strong>Suggestion:</strong> {{ suggestion }}
+        </div>
     </div>
     {% endif %}
 </body>

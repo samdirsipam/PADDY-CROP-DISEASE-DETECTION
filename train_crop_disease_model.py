@@ -1,5 +1,3 @@
-# FILE: train_crop_disease_model.py
-
 import os
 import numpy as np
 import tensorflow as tf
@@ -17,10 +15,8 @@ categories = [
 ]
 num_classes = len(categories)
 
-# Dataset Path
-dataset_path = "dataset/"  # Make sure the dataset structure follows: dataset/category_name/image.jpg
+dataset_path = "dataset/"
 
-# Load Images and Labels
 X, y = [], []
 img_size = (128, 128)
 

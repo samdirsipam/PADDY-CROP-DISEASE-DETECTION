@@ -4,4 +4,3 @@ numpy
 pillow
 uvicorn
 fastapi
-python -multipart

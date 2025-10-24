@@ -2,78 +2,126 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Crop Disease Prediction</title>
+    <title>Paddy Crop Disease Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* Reset and base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #a8e6cf, #dcedc1);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             min-height: 100vh;
-            margin: 0;
-            padding-top: 60px;
+            padding: 50px 20px;
         }
 
         h1 {
             color: #2e7d32;
-            font-size: 2.5em;
-            margin-bottom: 20px;
+            font-size: 3em;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
         form {
             background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             text-align: center;
+            max-width: 400px;
+            width: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
         }
 
         input[type="file"] {
-            padding: 10px;
+            padding: 12px;
             font-size: 1em;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            width: 100%;
+            border: 2px dashed #81c784;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            border-color: #388e3c;
         }
 
         button {
-            padding: 10px 20px;
-            background-color: #388e3c;
+            padding: 12px 25px;
+            background: linear-gradient(to right, #43a047, #66bb6a);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 12px;
             font-size: 1em;
             cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
 
         button:hover {
-            background-color: #2e7d32;
+            background: linear-gradient(to right, #2e7d32, #43a047);
+            transform: translateY(-2px);
         }
 
         .result {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #e8f5e9;
-            border: 2px solid #81c784;
-            border-radius: 10px;
+            margin-top: 40px;
+            padding: 25px 30px;
+            background-color: #f1f8e9;
+            border-left: 6px solid #388e3c;
+            border-radius: 14px;
             text-align: center;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            animation: fadeIn 0.8s ease forwards;
         }
 
         .result h2 {
             color: #1b5e20;
+            font-size: 1.8em;
+            margin-bottom: 10px;
         }
 
         .result h3 {
             color: #33691e;
+            font-size: 1.2em;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            form, .result {
+                padding: 25px 20px;
+            }
+            h1 {
+                font-size: 2.2em;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Paddy Crop Disease Prediction</h1>
+    <h1>Paddy Crop Disease Detection</h1>
 
     <form action="/predict" method="post" enctype="multipart/form-data">
         <input type="file" name="file" required><br>
-        <button type="submit">Predict</button>
+        <button type="submit">Predict Disease</button>
     </form>
 
     {% if prediction %}

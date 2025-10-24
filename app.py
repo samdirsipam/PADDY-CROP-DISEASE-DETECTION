@@ -21,6 +21,21 @@ categories = [
     'hispa', 'normal', 'tungro'
 ]
 
+# Disease-specific suggestions
+disease_suggestions = {
+    'bacterial_leaf_blight': "Remove infected leaves, use copper-based fungicides, and ensure proper spacing.",
+    'bacterial_leaf_streak': "Avoid overhead irrigation and apply recommended bactericides.",
+    'bacterial_panicle_blight': "Use resistant varieties and maintain proper field sanitation.",
+    'blast': "Apply fungicides like tricyclazole, maintain water management, and rotate crops.",
+    'brown_spot': "Use balanced fertilizers and remove infected debris.",
+    'dead_heart': "Ensure proper nitrogen management and control stem borer insects.",
+    'downy_mildew': "Apply systemic fungicides and ensure proper drainage.",
+    'hispa': "Monitor for insects and use appropriate insecticides.",
+    'normal': "No disease detected. Continue good agricultural practices.",
+    'tungro': "Control leafhopper insects and remove infected plants immediately."
+}
+
+
 def get_model():
     """Load the model only once when needed."""
     global model
@@ -54,7 +69,8 @@ def predict():
         
         predicted_class = categories[np.argmax(prediction)]
         confidence = float(np.max(prediction))
-        return render_template("index.html", prediction=predicted_class, confidence=confidence)
+        suggestion = disease_suggestions.get(predicted_class, "No suggestions available.")
+        return render_template("index.html", prediction=predicted_class, confidence=confidence, suggestion=suggestion)
 
     except Exception as e:
         return jsonify({"error": f"Prediction error: {str(e)}"}), 500
